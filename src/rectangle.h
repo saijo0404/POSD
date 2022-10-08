@@ -3,24 +3,20 @@
 #include <string>
 #include "shape.h"
 #include "two_dimensional_vector.h"
+#include "./iterator/null_iterator.h"
 
 class Rectangle : public Shape
 {
 private:
     TwoDimensionalVector *_lengthVec;
     TwoDimensionalVector *_widthVec;
-
 public:
     Rectangle(TwoDimensionalVector *lengthVec, TwoDimensionalVector *widthVec) {
-        if ( lengthVec->dot(widthVec)!=0 ){
-            throw std::runtime_error("error");
-        }
+        if ( lengthVec->dot(widthVec)!=0 ){ throw std::runtime_error("error"); }
         else{
             _lengthVec = lengthVec;
             _widthVec = widthVec;
         }
-        /*if ( _lengthVec->a()->x()==_lengthVec->b()->x() && _lengthVec->a()->x()==_widthVec->b()->x() ){ throw std::runtime_error("error"); }
-        if ( _lengthVec->a()->y()==_lengthVec->b()->y() && _lengthVec->a()->y()==_widthVec->b()->y() ){ throw std::runtime_error("error"); }*/
     }
     ~Rectangle() {}
 
@@ -38,4 +34,7 @@ public:
         std::string s = ostr.str();
         return s;
     }
+    Iterator* createDFSIterator() override { return new NullIterator(); }
+
+    Iterator* createBFSIterator() override { return new NullIterator(); }
 };

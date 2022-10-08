@@ -1,5 +1,15 @@
 #include "../src/circle.h"
 
+
+TEST(CircleTest, testRadius) {
+    Point point1(0, 0);
+    Point point2(0, 1);
+    TwoDimensionalVector twoDimensionalVector(&point1, &point2);
+    Circle circle(&twoDimensionalVector);
+
+    ASSERT_NEAR(1, circle.radius(), 0.001);
+}
+
 TEST(CircleTest, testInfo) {
     Point point1(-4.284, 0.264);
     Point point2(-4.827, 0.728);

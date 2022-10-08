@@ -4,6 +4,7 @@
 #include <cmath>
 #include "two_dimensional_vector.h"
 #include "shape.h"
+#include "./iterator/null_iterator.h"
 
 class Circle : public Shape
 {
@@ -26,4 +27,7 @@ public:
         std::string s = ostr.str();
         return s;
     }
+    Iterator* createDFSIterator() override { return new NullIterator(); }
+
+    Iterator* createBFSIterator() override { return new NullIterator(); }
 };

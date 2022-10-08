@@ -22,6 +22,30 @@ TEST(RectangleTest, testInfo) {
     ASSERT_EQ("Rectangle (Vector ((-2.00, 1.00), (1.50, 0.47)), Vector ((-2.00, 1.00), (-1.47, 4.50)))", rectangle.info());
 }
 
+TEST(RectangleTest, testLength) {
+    Point point1(-2, 1);
+    Point point2(-2, 3);
+    Point point3(-2, 1);
+    Point point4(-1, 1);
+    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
+    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
+    Rectangle rectangle(&twoDimensionalVector1,&twoDimensionalVector2);
+
+    ASSERT_NEAR(2, rectangle.length(), 0.001);
+}
+
+TEST(RectangleTest, testWidth) {
+    Point point1(-2, 1);
+    Point point2(-2, 3);
+    Point point3(-2, 1);
+    Point point4(-1, 1);
+    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
+    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
+    Rectangle rectangle(&twoDimensionalVector1,&twoDimensionalVector2);
+
+    ASSERT_NEAR(1, rectangle.width(), 0.001);
+}
+
 TEST(RectangleTest, testPerimeter) {
     Point point1(-2, 1);
     Point point2(1.5, 0.47);

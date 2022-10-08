@@ -3,6 +3,7 @@
 #include <string>
 #include "shape.h"
 #include "two_dimensional_vector.h"
+#include "./iterator/null_iterator.h"
 
 class Triangle : public Shape
 {
@@ -60,4 +61,7 @@ public:
         std::string s = ostr.str();
         return s;
     }
+    Iterator* createDFSIterator() override { return new NullIterator(); }
+
+    Iterator* createBFSIterator() override { return new NullIterator(); }
 };
