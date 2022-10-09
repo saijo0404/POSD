@@ -19,7 +19,11 @@ public:
         }
     }
     CompoundShape() {}
-    ~CompoundShape() {}
+    ~CompoundShape() {
+        for ( std::list<Shape*>::const_iterator it = _shapes.begin(); it != _shapes.end(); it++ ) {
+            delete *it;
+        }
+    }
 
     double area() const override {
         double result = 0;
