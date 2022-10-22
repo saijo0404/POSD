@@ -1,8 +1,8 @@
 #pragma once
 
+#include <list>
 #include "iterator.h"
 #include "../shape.h"
-#include <list>
 
 class CompoundShape;
 

@@ -1,9 +1,5 @@
-#include "../../src/iterator/bfs_compound_iterator.h"
-#include "../../src/compound_shape.h"
-#include "../../src/shape.h"
-#include "../../src/rectangle.h"
-
 #include <iostream>
+#include "../../src/iterator/factory/bfs_iterator_factory.h"
 
 class BFSCompoundIteratorTest : public ::testing::Test
 {
@@ -197,6 +193,37 @@ TEST_F(BFSCompoundIteratorTest, BFSOrderShouldBeCorrectWithComplicatedTreeStruct
     ASSERT_EQ(5 * 5 * M_PI, it->currentItem()->area());
     it->next();
     ASSERT_EQ(15, it->currentItem()->area());
+    it->next();
+    ASSERT_TRUE(it->isDone());
+}
+
+TEST_F(BFSCompoundIteratorTest, FactoryBFSOrderShouldBeCorrectWithMultipleCompoundShapes){
+    Point* p1 = new Point(0, 0);
+    Point* p2 = new Point(0, 5);
+    Point* p3 = new Point(5, 0);
+    Point* p4 = new Point(0, 3);
+
+    TwoDimensionalVector* vec1 = new TwoDimensionalVector(p1, p2);
+    TwoDimensionalVector* vec2 = new TwoDimensionalVector(p1, p3);
+    TwoDimensionalVector* vec3 = new TwoDimensionalVector(p1, p4);
+
+    CompoundShape* cs1 = new CompoundShape();
+    cs1->addShape(new Circle(vec3));
+    CompoundShape* cs2 = new CompoundShape();
+    cs2->addShape(new Circle(vec1));
+    CompoundShape* cs3 = new CompoundShape();
+    cs3->addShape(cs1);
+    cs3->addShape(cs2);
+
+    Iterator* it = cs3->createIterator(new BFSIteratorFactory());
+    it->first();
+    ASSERT_EQ(3 * 3 * M_PI, it->currentItem()->area());
+    it->next();
+    ASSERT_EQ(5 * 5 * M_PI, it->currentItem()->area());
+    it->next();
+    ASSERT_EQ(3 * 3 * M_PI, it->currentItem()->area());
+    it->next();
+    ASSERT_EQ(5 * 5 * M_PI, it->currentItem()->area());
     it->next();
     ASSERT_TRUE(it->isDone());
 }

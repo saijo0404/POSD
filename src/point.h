@@ -25,6 +25,10 @@ public:
         return ((int)(_x * multiplier + 0.5) / (multiplier * 1.0)==(int)(pt._x * multiplier + 0.5) / (multiplier * 1.0)) && ((int)(_y * multiplier + 0.5) / (multiplier * 1.0)==(int)(pt._y * multiplier + 0.5) / (multiplier * 1.0));
     }
 
+    const Point operator+(const Point pt) const{ return Point(_x + pt._x, _y + pt._y); }
+
+    const Point operator-(const Point pt) const{ return Point(_x - pt._x, _y - pt._y); }
+
     std::string info() const {
         std::ostringstream ostr;
         ostr << "(" << std::showpoint << std::setprecision(2) << std::fixed << _x << ", " << std::showpoint << std::setprecision(2) << std::fixed << _y <<")";

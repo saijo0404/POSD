@@ -1,6 +1,6 @@
 #include "../src/two_dimensional_vector.h"
 
-TEST(TwoDimensionalVectorTest, testNotSame) {
+TEST(TwoDimensionalVectorTest, Constructor) {
     Point point1(-8.42, 3.42);
     Point point2(-3.38, 4.3);
     ASSERT_NO_THROW(TwoDimensionalVector twoDimensionalVector(&point1, &point2));
@@ -11,7 +11,7 @@ TEST(TwoDimensionalVectorTest, testNotSame) {
     ASSERT_EQ(4.3, twoDimensionalVector.b()->y());
 }
 
-TEST(TwoDimensionalVectorTest, testInfo) {
+TEST(TwoDimensionalVectorTest, Info) {
     Point point1(-8.42, 3.42);
     Point point2(-3.38, 4.3);
     TwoDimensionalVector twoDimensionalVector(&point1, &point2);
@@ -19,7 +19,7 @@ TEST(TwoDimensionalVectorTest, testInfo) {
     ASSERT_EQ("Vector ((-8.42, 3.42), (-3.38, 4.30))", twoDimensionalVector.info());
 }
 
-TEST(TwoDimensionalVectorTest, testLength) {
+TEST(TwoDimensionalVectorTest, Length) {
     Point point1(-8.42, 3.42);
     Point point2(-3.38, 4.3);
     TwoDimensionalVector twoDimensionalVector(&point1, &point2);
@@ -27,7 +27,7 @@ TEST(TwoDimensionalVectorTest, testLength) {
     ASSERT_NEAR(5.1162, twoDimensionalVector.length(), 0.001);
 }
 
-TEST(TwoDimensionalVectorTest, testDot) {
+TEST(TwoDimensionalVectorTest, Dot) {
     Point point1(0, 0);
     Point point2(3, 0);
     TwoDimensionalVector twoDimensionalVector(&point1, &point2);
@@ -37,7 +37,7 @@ TEST(TwoDimensionalVectorTest, testDot) {
     ASSERT_NEAR(0, twoDimensionalVector.dot(&twoDimensionalVector2), 0.001);
 }
 
-TEST(TwoDimensionalVectorTest, testCross) {
+TEST(TwoDimensionalVectorTest, Cross) {
     Point point1(-8.42, 3.42);
     Point point2(-3.38, 4.3);
     TwoDimensionalVector twoDimensionalVector(&point1, &point2);

@@ -1,10 +1,14 @@
 #pragma once
 
+#include <list>
+#include <set>
 #include "shape.h"
+#include "point.h"
+#include "two_dimensional_vector.h"
 #include "./iterator/dfs_compound_iterator.h"
 #include "./iterator/bfs_compound_iterator.h"
-
-#include <list>
+#include "./visitor/shape_visitor.h"
+#include "./iterator/factory/iterator_factory.h"
 
 class CompoundShape : public Shape
 {
@@ -19,11 +23,7 @@ public:
         }
     }
     CompoundShape() {}
-    ~CompoundShape() {
-        for ( std::list<Shape*>::const_iterator it = _shapes.begin(); it != _shapes.end(); it++ ) {
-            delete *it;
-        }
-    }
+    ~CompoundShape() {}
 
     double area() const override {
         double result = 0;
@@ -61,4 +61,21 @@ public:
     }
     Iterator *createDFSIterator() override { return new DFSCompoundIterator<std::list<Shape*>::iterator>(_shapes.begin(),_shapes.end()); }
     Iterator *createBFSIterator() override { return new BFSCompoundIterator<std::list<Shape*>::iterator>(_shapes.begin(),_shapes.end()); }
+    Iterator *createIterator(IteratorFactory *factory) override { return factory->createIterator(_shapes.begin(),_shapes.end()); }
+
+    std::set<const Point*> getPoints() {
+        std::set<const Point*> points;
+        std::set<std::string> tmp;
+        for ( std::list<Shape*>::const_iterator it = _shapes.begin(); it != _shapes.end(); it++ ) {
+            std::set<const Point*> tpoints = (*it)->getPoints();
+            for ( std::set<const Point*>::const_iterator i = tpoints.begin(); i!=tpoints.end();i++ ) {
+                if ( tmp.find((*i)->info())==tmp.end() ){ tmp.insert((*i)->info()); points.insert(*i);}
+            }
+        }
+        return points;
+    }
+
+    void accept(ShapeVisitor* visitor) {
+        visitor->visitCompoundShape(this);
+    };
 };
