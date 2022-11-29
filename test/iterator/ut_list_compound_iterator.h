@@ -92,3 +92,26 @@ TEST(ListCompoundIteratorTest, IsDone) {
     it->next();
     ASSERT_TRUE(it->isDone());
 }
+
+TEST(ListCompoundIteratorTest, GetInstance) {
+    Point* p1 = new Point(0, 0);
+    Point* p2 = new Point(0, 5);
+    Point* p3 = new Point(5, 0);
+
+    TwoDimensionalVector* vec1 = new TwoDimensionalVector(p1, p2);
+    TwoDimensionalVector* vec2 = new TwoDimensionalVector(p1, p3);
+
+    Shape* circle = new Circle(vec1);
+    Shape* rectangle = new Rectangle(vec1,vec2);
+    CompoundShape* cs1 = new CompoundShape();
+    cs1->addShape(circle);
+    cs1->addShape(rectangle);
+
+    Iterator* it = cs1->createIterator(IteratorFactory::getInstance("List"));
+    it->first();
+    ASSERT_EQ(circle->area(), it->currentItem()->area());
+    it->next();
+    ASSERT_EQ(rectangle->area(), it->currentItem()->area());
+    it->next();
+    ASSERT_TRUE(it->isDone());
+}

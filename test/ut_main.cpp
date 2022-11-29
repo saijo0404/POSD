@@ -12,6 +12,9 @@
 #include "./iterator/ut_list_compound_iterator.h"
 #include "./ut_bounding_box.h"
 #include "./visitor/ut_collision_detector.h"
+#include "./builder/ut_shape_builder.h"
+#include "./builder/ut_scanner.h"
+#include "./builder/ut_shape_parser.h"
 
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);

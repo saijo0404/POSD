@@ -2,7 +2,12 @@
 #include "../bfs_compound_iterator.h"
 #include "../null_iterator.h"
 
+BFSIteratorFactory BFSIteratorFactory::_instance;
+
+BFSIteratorFactory::BFSIteratorFactory() { IteratorFactory::_register("BFS", this); }
+
 Iterator* BFSIteratorFactory::createIterator() { return new NullIterator(); }
+
 Iterator* BFSIteratorFactory::createIterator(std::list<Shape *>::const_iterator begin, std::list<Shape *>::const_iterator end) {
      return new BFSCompoundIterator<std::list<Shape *>::const_iterator>(begin,end);
 }

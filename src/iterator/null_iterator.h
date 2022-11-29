@@ -7,9 +7,9 @@ class NullIterator : public Iterator
 public:
     void first() override { throw std::string("error");}
 
-    Shape* currentItem() const override { throw std::runtime_error("error"); }
+    Shape* currentItem() const override { throw std::string("error"); }
 
-    void next() override { throw std::runtime_error("error"); }
+    void next() override { throw std::string("error"); }
 
     bool isDone() const override { return true; }
 };
