@@ -1,19 +1,18 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
-class Scanner
-{
+class Scanner {
 private:
     std::string _input;
     std::string::size_type pos = 0;
     std::vector<std::string> tokenList = {"Circle", "Rectangle", "Triangle", "CompoundShape", "Vector", "(", ")", ","};
-public:
-    Scanner(std::string input = "") { _input = input; }
 
-    void skipWhiteSpace() {
-        while(_input[pos] == ' ') { pos++; }
-    }
+public:
+    Scanner(std::string input = ""): _input(input) {}
+
+    void skipWhiteSpace() { while(_input[pos] == ' ') { pos++; } }
 
     std::string next() {
         std::string result = "";

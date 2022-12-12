@@ -1,187 +1,107 @@
 #include "../src/compound_shape.h"
+#include "../src/iterator/iterator.h"
+#include "../src/iterator/factory/dfs_iterator_factory.h"
+#include "../src/iterator/factory/bfs_iterator_factory.h"
+#include "../src/iterator/factory/list_iterator_factory.h"
 
-TEST(CompountShapeTest, Area) {
-    std::list<Shape*> shapes = {
-        new Circle(
-         new TwoDimensionalVector(
-                new Point(0, 0),
-                new Point(0, 1)
-            )
-        ),
-        new Rectangle(
-            new TwoDimensionalVector(
-                new Point(0, 3), new Point(0, 0)
-            ),
-            new TwoDimensionalVector(
-                new Point(0, 0), new Point(1, 0)
-            )
-        )
-    };
-    CompoundShape compoundshape(shapes);
+class CompoundShapeTest : public ::testing::Test{
+protected:
+    Point *p1, *p2, *p3, *p4;
+    TwoDimensionalVector *vec1, *vec2, *vec3;
+    Shape *cir1, *cir2, *rect;
+    CompoundShape *cs1, *cs2, *cs3;
 
-    ASSERT_NEAR(1 * 1 * M_PI + 3 * 1, compoundshape.area(), 0.01);
+    void SetUp() override {
+        p1 = new Point(0, 0);
+        p2 = new Point(0, 1);
+        p3 = new Point(0, 3);
+        p4 = new Point(1, 0);
+
+        vec1 = new TwoDimensionalVector(*p1, *p2);
+        vec2 = new TwoDimensionalVector(*p3, *p1);
+        vec3 = new TwoDimensionalVector(*p1, *p4);
+        cir1 = new Circle(*vec1);
+        rect = new Rectangle(*vec2, *vec3);
+
+        Shape *sp1[] = {cir1, rect};
+        cs1 = new CompoundShape(sp1, 2);
+    }
+
+    void TearDown() override {
+        delete cs1;
+        delete p1;
+        delete p2;
+        delete p3;
+        delete p4;
+        delete vec1;
+        delete vec2;
+        delete vec3;
+    }
+};
+
+TEST_F(CompoundShapeTest, Area) {
+    ASSERT_NEAR(1 * 1 * M_PI + 3 * 1, cs1->area(), 0.01);
 }
 
-TEST(CompountShapeTest, Perimeter) {
-    std::list<Shape*> shapes = {
-        new Circle(
-         new TwoDimensionalVector(
-                new Point(0, 0),
-                new Point(0, 1)
-            )
-        ),
-        new Rectangle(
-            new TwoDimensionalVector(
-                new Point(0, 3), new Point(0, 0)
-            ),
-            new TwoDimensionalVector(
-                new Point(0, 0), new Point(1, 0)
-            )
-        )
-    };
-    CompoundShape compoundshape(shapes);
-
-    ASSERT_NEAR(2 * 1 * M_PI + 8, compoundshape.perimeter(), 0.01);
+TEST_F(CompoundShapeTest, Perimeter) {
+    ASSERT_NEAR(2 * 1 * M_PI + 8, cs1->perimeter(), 0.01);
 }
 
-TEST(CompountShapeTest, Info) {
-    std::list<Shape*> shapes = {
-        new Circle(
-         new TwoDimensionalVector(
-                new Point(1.3449, -1.999),
-                new Point(6.0, 7)
-            )
-        ),
-        new Rectangle(
-            new TwoDimensionalVector(
-                new Point(-3, 3), new Point(-1, 3)
-            ),
-            new TwoDimensionalVector(
-                new Point(-1, 3), new Point(-1, -1)
-            )
-        )
-    };
-    CompoundShape compoundshape(shapes);
-
-    ASSERT_EQ("CompoundShape (Circle (Vector ((1.34, -2.00), (6.00, 7.00))), Rectangle (Vector ((-3.00, 3.00), (-1.00, 3.00)), Vector ((-1.00, 3.00), (-1.00, -1.00))))", compoundshape.info());
+TEST_F(CompoundShapeTest, Info) {
+    ASSERT_EQ("CompoundShape (Circle (Vector ((0.00, 0.00), (0.00, 1.00))), Rectangle (Vector ((0.00, 3.00), (0.00, 0.00)), Vector ((0.00, 0.00), (1.00, 0.00))))", cs1->info());
 }
 
-TEST(CompountShapeTest, DeleteShape) {
-    std::list<Shape*> shapes = {
-        new Circle(
-         new TwoDimensionalVector(
-                new Point(1.3449, -1.999),
-                new Point(6.0, 7)
-            )
-        ),
-        new Rectangle(
-            new TwoDimensionalVector(
-                new Point(-3, 3), new Point(-1, 3)
-            ),
-            new TwoDimensionalVector(
-                new Point(-1, 3), new Point(-1, -1)
-            )
-        )
-    };
-    CompoundShape compoundshape(shapes);
-    compoundshape.deleteShape(new Circle(new TwoDimensionalVector(new Point(1.3449, -1.999),new Point(6.0, 7))));
+TEST_F(CompoundShapeTest, AddAndDeleteShape) {
+    Shape *shapes[] = {};
+    CompoundShape *cs = new CompoundShape(shapes, 0);
+    Shape *c1 = new Circle(*vec1);
+    Shape *c2 = new Circle(*vec3);
 
-    ASSERT_EQ("CompoundShape (Rectangle (Vector ((-3.00, 3.00), (-1.00, 3.00)), Vector ((-1.00, 3.00), (-1.00, -1.00))))", compoundshape.info());
+    cs->addShape(c1);
+    ASSERT_EQ("CompoundShape (Circle (Vector ((0.00, 0.00), (0.00, 1.00))))", cs->info());
+    cs->addShape(c2);
+    ASSERT_EQ("CompoundShape (Circle (Vector ((0.00, 0.00), (0.00, 1.00))), Circle (Vector ((0.00, 0.00), (1.00, 0.00))))", cs->info());
+    cs->deleteShape(c2);
+    ASSERT_EQ("CompoundShape (Circle (Vector ((0.00, 0.00), (0.00, 1.00))))", cs->info());
+
+    delete cs;
 }
 
-TEST(CompountShapeTest, AddShape) {
-    std::list<Shape*> shapes = {
-        new Circle(
-         new TwoDimensionalVector(
-                new Point(1.3449, -1.999),
-                new Point(6.0, 7)
-            )
-        ),
-        new Rectangle(
-            new TwoDimensionalVector(
-                new Point(-3, 3), new Point(-1, 3)
-            ),
-            new TwoDimensionalVector(
-                new Point(-1, 3), new Point(-1, -1)
-            )
-        )
-    };
-    CompoundShape compoundshape(shapes);
-    compoundshape.addShape(new Circle(new TwoDimensionalVector(new Point(1.3449, -1.999),new Point(6.0, 8))));
-
-    ASSERT_EQ("CompoundShape (Circle (Vector ((1.34, -2.00), (6.00, 7.00))), Rectangle (Vector ((-3.00, 3.00), (-1.00, 3.00)), Vector ((-1.00, 3.00), (-1.00, -1.00))), Circle (Vector ((1.34, -2.00), (6.00, 8.00))))", compoundshape.info());
+TEST_F(CompoundShapeTest, GetPoint) {
+    std::set<Point> points = cs1->getPoints();
+    ASSERT_EQ(6,points.size());
+    std::set<Point>::const_iterator it = points.begin();
+    ASSERT_EQ("(-1.00, -1.00)",(*it).info());
+    ++it;
+    ASSERT_EQ("(0.00, 0.00)",(*it).info());
+    ++it;
+    ASSERT_EQ("(0.00, 3.00)",(*it).info());
+    ++it;
+    ASSERT_EQ("(1.00, 0.00)",(*it).info());
+    ++it;
+    ASSERT_EQ("(1.00, 1.00)",(*it).info());
+    ++it;
+    ASSERT_EQ("(1.00, 3.00)",(*it).info());
 }
 
-TEST(CompountShapeTest, DFSIterator) {
-    Point* p1 = new Point(0, 0);
-    Point* p2 = new Point(0, 5);
-    Point* p3 = new Point(5, 0);
-    Point* p4 = new Point(0, 3);
-
-    TwoDimensionalVector* vec1 = new TwoDimensionalVector(p1, p2);
-    TwoDimensionalVector* vec2 = new TwoDimensionalVector(p1, p3);
-    TwoDimensionalVector* vec3 = new TwoDimensionalVector(p1, p4);
-
-    CompoundShape* cs1 = new CompoundShape();
-    cs1->addShape(new Circle(vec1));
-    cs1->addShape(new Rectangle(vec1,vec2));
-
-    CompoundShape* cs2 = new CompoundShape();
-    cs2->addShape(new Circle(vec3));
-    cs2->addShape(cs1);
-
-    Iterator* it = cs2->createDFSIterator();
+TEST_F(CompoundShapeTest, DFSIterator) {
+    Iterator* it = cs1->createIterator(IteratorFactory::getInstance("DFS"));
     it ->first();
-    ASSERT_EQ(3 * 3 * M_PI, it->currentItem()->area());
-    it->next();
-    ASSERT_EQ(5 * 5 * M_PI + 25, it->currentItem()->area());
-    it->next();
-    ASSERT_EQ(5 * 5 * M_PI, it->currentItem()->area());
-    it->next();
-    ASSERT_EQ(25, it->currentItem()->area());
+    ASSERT_EQ(1 * 1 * M_PI, it->currentItem()->area());
+    it ->next();
+    ASSERT_EQ(3 * 1 , it->currentItem()->area());
+    it ->next();
+    ASSERT_TRUE(it ->isDone());
+    delete it;
 }
 
-TEST(CompountShapeTest, BFSIterator) {
-    Point* p1 = new Point(0, 0);
-    Point* p2 = new Point(0, 5);
-    Point* p3 = new Point(5, 0);
-    Point* p4 = new Point(0, 3);
-
-    TwoDimensionalVector* vec1 = new TwoDimensionalVector(p1, p2);
-    TwoDimensionalVector* vec2 = new TwoDimensionalVector(p1, p3);
-    TwoDimensionalVector* vec3 = new TwoDimensionalVector(p1, p4);
-
-    CompoundShape* cs1 = new CompoundShape();
-    cs1->addShape(new Circle(vec1));
-    cs1->addShape(new Rectangle(vec1,vec2));
-
-    CompoundShape* cs2 = new CompoundShape();
-    cs2->addShape(new Circle(vec3));
-    cs2->addShape(cs1);
-
-    Iterator* it = cs2->createBFSIterator();
+TEST_F(CompoundShapeTest, BFSIterator) {
+    Iterator* it = cs1->createIterator(IteratorFactory::getInstance("BFS"));
     it ->first();
-    ASSERT_EQ(3 * 3 * M_PI, it->currentItem()->area());
-    it->next();
-    ASSERT_EQ(5 * 5 * M_PI + 25, it->currentItem()->area());
-    it->next();
-    ASSERT_EQ(5 * 5 * M_PI, it->currentItem()->area());
-    it->next();
-    ASSERT_EQ(25, it->currentItem()->area());
-}
-
-TEST(CompountShapeTest, GetPoint) {
-    Point* p1 = new Point(0, 0);
-    Point* p2 = new Point(0, 5);
-    Point* p3 = new Point(5, 0);
-
-    TwoDimensionalVector* vec1 = new TwoDimensionalVector(p1, p2);
-    TwoDimensionalVector* vec2 = new TwoDimensionalVector(p1, p3);
-
-    CompoundShape* cs1 = new CompoundShape();
-    cs1->addShape(new Circle(vec1));
-    cs1->addShape(new Rectangle(vec1,vec2));
-
-    std::set<const Point*> result = cs1->getPoints();
-    ASSERT_EQ(5,result.size());
+    ASSERT_EQ(1 * 1 * M_PI, it->currentItem()->area());
+    it ->next();
+    ASSERT_EQ(3 * 1 , it->currentItem()->area());
+    it ->next();
+    ASSERT_TRUE(it ->isDone());
+    delete it;
 }

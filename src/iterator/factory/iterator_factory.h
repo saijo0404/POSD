@@ -2,7 +2,7 @@
 
 #include "../iterator.h"
 #include <list>
-#include <string>
+#include <map>
 
 class IteratorFactory
 {
@@ -12,4 +12,6 @@ public:
     static IteratorFactory* getInstance(std::string name);
 protected:
     static void _register(std::string name, IteratorFactory* factory);
+private:
+    static std::map<std::string, IteratorFactory*> _registry;
 };

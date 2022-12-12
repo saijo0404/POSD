@@ -10,6 +10,7 @@ TEST(PaserTest, Paser) {
     parser.parse();
     std::vector<Shape*> results = parser.getResult();
     ASSERT_EQ("CompoundShape (Circle (Vector ((0.00, 0.00), (5.00, 0.00))), CompoundShape (Triangle (Vector ((0.00, 0.00), (5.00, 0.00)), Vector ((0.00, 0.00), (0.00, 5.00))), Rectangle (Vector ((0.00, 0.00), (5.00, 0.00)), Vector ((0.00, 0.00), (0.00, 5.00)))))", results.at(0)->info());
+    delete results[0];
 }
 
 TEST(PaserTest, MultiPaser) {
@@ -21,4 +22,6 @@ TEST(PaserTest, MultiPaser) {
     std::vector<Shape*> results = parser.getResult();
     ASSERT_EQ("Circle (Vector ((0.00, 0.00), (5.00, 0.00)))", results.at(0)->info());
     ASSERT_EQ("CompoundShape (Triangle (Vector ((0.00, 0.00), (5.00, 0.00)), Vector ((0.00, 0.00), (0.00, 5.00))), Rectangle (Vector ((0.00, 0.00), (5.00, 0.00)), Vector ((0.00, 0.00), (0.00, 5.00))))", results.at(1)->info());
+    delete results[0];
+    delete results[1];
 }

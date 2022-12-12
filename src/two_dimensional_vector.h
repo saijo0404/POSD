@@ -1,45 +1,37 @@
 #pragma once
 
+#include <cmath>
 #include "point.h"
 
 class TwoDimensionalVector
 {
 private:
-    const Point *_a;
-    const Point *_b;
+    Point _a;
+    Point _b;
 
 public:
-    TwoDimensionalVector(const Point *a, const Point *b) {
-        _a = a;
-        _b = b;
-    }
+    TwoDimensionalVector(Point a, Point b) : _a(a), _b(b) {}
     ~TwoDimensionalVector() {}
 
-    const Point *a() const { return _a; }
+    const Point *a() const { return &_a; }
 
-    const Point *b() const { return _b; }
+    const Point *b() const { return &_b; }
 
-    double length() const { 
-        const Point tmp = (*_a)-(*_b);
-        return sqrt(tmp.x()*tmp.x()+tmp.y()*tmp.y());
+    double length() const { return sqrt(pow(_b.x() - _a.x(), 2) + pow(_b.y() - _a.y(), 2)); }
+
+    double dot(TwoDimensionalVector vec) const {
+        return (_b.x() - _a.x()) * ((vec.b())->x() - vec.a()->x()) + (_b.y() - _a.y()) * (vec.b()->y() - vec.a()->y());
     }
 
-    double dot(const TwoDimensionalVector *vec) const {
-        const Point tmp = (*_b)-(*_a);
-        const Point tmp1 = (*vec->_b)-(*vec->_a);
-        return (tmp.x()*tmp1.x()+tmp.y()*tmp1.y());
-    }
-
-    double cross(const TwoDimensionalVector *vec) const { 
-        const Point tmp = (*_b)-(*_a);
-        const Point tmp1 = (*vec->_b)-(*vec->_a);
-        return (tmp.x()*tmp1.y()-tmp1.x()*tmp.y());
+    double cross(TwoDimensionalVector vec) const{
+        return (_b.x() - _a.x()) * ((vec.b())->y() - vec.a()->y()) - (_b.y() - _a.y()) * (vec.b()->x() - vec.a()->x());
     }
 
     std::string info() const {
-        std::ostringstream ostr;
-        ostr << "Vector (" << _a->info() << ", " << _b->info() <<")";
+        /*std::ostringstream ostr;
+        ostr << "Vector (" << _a.info() << ", " << _b.info() <<")";
         std::string s = ostr.str();
-        return s;
+        return s;*/
+        return "Vector (" + _a.info() + ", " + _b.info() + ")";
     }
 };

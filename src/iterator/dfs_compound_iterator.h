@@ -1,48 +1,39 @@
 #pragma once
 
-#include <list>
 #include "iterator.h"
 #include "../shape.h"
+#include "./factory/dfs_iterator_factory.h"
+#include <list>
 
-class CompoundShape;
 
 template<class ForwardIterator>
-class DFSCompoundIterator : public Iterator
-{
+class DFSCompoundIterator : public Iterator {
 private:
     std::list<Shape *> _shapes;
-    ForwardIterator _current;
-    ForwardIterator _end;
 public:
     DFSCompoundIterator(ForwardIterator begin, ForwardIterator end) {
-        if ( begin!=end ) {
-            while (true) {
-                _shapes.push_back(*begin);
-                Iterator* it = (*begin)->createDFSIterator();
-                if ( !it->isDone() ){
-                    for ( it->first();!it->isDone();it->next() ){ _shapes.push_back(it->currentItem()); }
-                }
-                begin++;
-                if ( begin==end ) { break; }
+        for(ForwardIterator it=begin; it!=end; it++){
+            Iterator *itt = (*it)->createIterator(IteratorFactory::getInstance("DFS"));
+            if( !itt->isDone() ) {
+                _shapes.push_back(*it);
+                for (;!itt->isDone();itt->next() ){ _shapes.push_back(itt->currentItem()); }
             }
+            else { _shapes.push_back(*it); }
+            delete itt;
         }
-        _current = _shapes.begin();
-        _end = _shapes.end();
     }
 
-    void first() override { _current = _shapes.begin(); }
+    void first() override {}
 
-    Shape* currentItem() const override { 
-        for (std::list<Shape*>::const_iterator it = _shapes.begin(); it != _shapes.end(); it++) {
-            if ( _current==it ) { return *_current; }
-        }
-        throw std::runtime_error("error");
+    Shape* currentItem() const override {
+        if(isDone()) { throw "no current item"; }
+        return *_shapes.begin();
     }
 
-    void next() override { 
-        if ( _current==_end ){ throw std::runtime_error("error"); }
-        else { _current++; }
+    void next() override {
+        if (isDone()) { throw "can't next"; }
+        _shapes.pop_front();
     }
 
-    bool isDone() const override { return _current==_end;}
+    bool isDone() const override { return _shapes.size() == 0; }
 };

@@ -18,6 +18,9 @@ TEST = test/ut_point.h \
 		test/builder/ut_shape_builder.h \
 		test/builder/ut_scanner.h \
 		test/builder/ut_shape_parser.h \
+		test/utils/ut_file_reader.h \
+		test/graphics/mock_sdl_renderer.h \
+		test/graphics/ut_sdl_adapter.h \
 
 SRC = src/point.h \
 		src/two_dimensional_vector.h \
@@ -41,11 +44,24 @@ SRC = src/point.h \
 		src/builder/shape_builder.h \
 		src/builder/scanner.h \
 		src/builder/shape_parser.h \
+		src/utils/file_reader.h \
+		src/visitor/shape_printer.h \
+
+GRAPHICS = src/graphics/canvas.h \
+		src/graphics/sdl_adapter.h \
+		src/graphics/sdl/sdl.h \
+		src/graphics/sdl/sdl_renderer.h \
+		src/graphics/sdl/piece/piece.h \
+		src/graphics/sdl/piece/cir_piece.h \
+		src/graphics/sdl/piece/line_piece.h \
 
 FACTORY = obj/iterator_factory.o \
 		obj/dfs_iterator_factory.o \
 		obj/bfs_iterator_factory.o \
 		obj/list_iterator_factory.o \
+
+sdl: src/graphics.cpp $(SRC) $(GRAPHICS) $(FACTORY)
+	g++ -std=c++17 src/graphics.cpp $(FACTORY) -o bin/graphics -lSDL2 -lSDL2_image
 
 ut_main: test/ut_main.cpp $(TEST) $(SRC) $(FACTORY)
 	g++ -std=c++17 test/ut_main.cpp $(FACTORY) -o bin/ut_all -lgtest -lpthread
@@ -77,3 +93,14 @@ clean:
 
 test: all
 	bin/ut_all
+
+graphics: directories sdl
+	bin/graphics ./input.txt
+
+# valgrind: CXXFLAGS += -O0 -g
+valgrind: clean all
+	valgrind \
+	--tool=memcheck --error-exitcode=1 --track-origins=yes --leak-check=full --leak-resolution=high \
+	--num-callers=50 --show-leak-kinds=definite,possible --show-error-list=yes \
+	bin/ut_all --gtest_output=xml:result.xml
+

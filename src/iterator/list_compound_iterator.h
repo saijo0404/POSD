@@ -1,42 +1,33 @@
 #pragma once
 
-#include <list>
 #include "./iterator.h"
-#include "../shape.h"
+#include <list>
+
 
 template <class ForwardIterator>
-class ListCompoundIterator : public Iterator
-{
+class ListCompoundIterator : public Iterator {
 private:
     std::list<Shape *> _shapes;
-    ForwardIterator _current;
-    ForwardIterator _end;
-public:
-    ListCompoundIterator(ForwardIterator begin, ForwardIterator end) {
-        if ( begin!=end ) {
-            while (true) {
-                _shapes.push_back(*begin);
-                begin++;
-                if ( begin==end ) { break; }
-            }
-        }
-        _current = _shapes.begin();
-        _end = _shapes.end();
-    }
 
-    void first() override { _current = _shapes.begin(); }
+public:
+    ListCompoundIterator(ForwardIterator begin, ForwardIterator end){
+        for (ForwardIterator it = begin; it != end; it++) {
+            _shapes.push_back(*it);
+        }
+    }
+    void first() override {}
 
     Shape *currentItem() const override {
-         for (std::list<Shape*>::const_iterator it = _shapes.begin(); it != _shapes.end(); it++) { 
-            if ( _current==it ) { return *_current; } 
-        }
-        throw std::runtime_error("error");
+        if (isDone()) { throw "no current item"; }
+        return (*_shapes.begin());
     }
 
     void next() override {
-        if ( _current==_end ){ throw std::runtime_error("error"); }
-        else { _current++; }
+        if (isDone()) { throw "can't next"; }
+        _shapes.pop_front();
     }
 
-    bool isDone() const override { return _current == _end; }
+    bool isDone() const override {
+        return _shapes.size() == 0;
+    }
 };

@@ -1,13 +1,11 @@
 #pragma once
-
 #include "./scanner.h"
 #include "./shape_builder.h"
 #include "../two_dimensional_vector.h"
 #include <string>
 #include <vector>
 
-class ShapeParser
-{
+class ShapeParser{
 private:
     Scanner *_scanner;
     ShapeBuilder *_builder;
@@ -40,8 +38,8 @@ public:
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
-        Point* p1 = new Point (px1, py1);
-        Point* p2 = new Point (px2, py2);
+        Point p1(px1, py1);
+        Point p2(px2, py2);
         _builder->buildCircle(p1, p2);
     }
 
@@ -77,16 +75,16 @@ public:
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
-        Point* p1 = new Point (px1, py1);
-        Point* p2 = new Point (px2, py2);
-        Point* p3 = new Point (px3, py3);
-        Point* p4 = new Point (px4, py4);
-        if ( p1->info()==p3->info() ){ _builder->buildTriangle(p1, p2, p4); }
-        if ( p1->info()==p4->info() ){ _builder->buildTriangle(p1, p2, p3); }
-        if ( p2->info()==p3->info() ){ _builder->buildTriangle(p2, p1, p4); }
-        if ( p2->info()==p4->info() ){ _builder->buildTriangle(p2, p1, p4); }
+        Point p1(px1, py1);
+        Point p2(px2, py2);
+        Point p3(px3, py3);
+        Point p4(px4, py4);
+        if ( p1.info()==p3.info() ){ _builder->buildTriangle(p1, p2, p4); }
+        if ( p1.info()==p4.info() ){ _builder->buildTriangle(p1, p2, p3); }
+        if ( p2.info()==p3.info() ){ _builder->buildTriangle(p2, p1, p4); }
+        if ( p2.info()==p4.info() ){ _builder->buildTriangle(p2, p1, p4); }
     }
-    
+
     void parseRectangle() {
         if ( _scanner->next()!="(" ){ throw std::string("error"); }
         if ( _scanner->next()!="Vector" ){ throw std::string("error"); }
@@ -119,16 +117,16 @@ public:
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
         if ( _scanner->next()!=")" ){ throw std::string("error"); }
-        Point* p1 = new Point (px1, py1);
-        Point* p2 = new Point (px2, py2);
-        Point* p3 = new Point (px3, py3);
-        Point* p4 = new Point (px4, py4);
-        if ( p1->info()==p3->info() ){ _builder->buildRectangle(p1, p2, p4); }
-        if ( p1->info()==p4->info() ){ _builder->buildRectangle(p1, p2, p3); }
-        if ( p2->info()==p3->info() ){ _builder->buildRectangle(p2, p1, p4); }
-        if ( p2->info()==p4->info() ){ _builder->buildRectangle(p2, p1, p4); }
+        Point p1(px1, py1);
+        Point p2(px2, py2);
+        Point p3(px3, py3);
+        Point p4(px4, py4);
+        if ( p1.info()==p3.info() ){ _builder->buildRectangle(p1, p2, p4); }
+        if ( p1.info()==p4.info() ){ _builder->buildRectangle(p1, p2, p3); }
+        if ( p2.info()==p3.info() ){ _builder->buildRectangle(p2, p1, p4); }
+        if ( p2.info()==p4.info() ){ _builder->buildRectangle(p2, p1, p4); }
     }
-    
+
     void parseCompoundShape(){
         if ( _scanner->next()!="(" ){ throw std::string("error"); }
         _builder->buildCompoundShape();

@@ -6,29 +6,30 @@
 #include <vector>
 #include <stack>
 
-class ShapeBuilder{
+class ShapeBuilder {
 private:
     std::stack<CompoundShape*> _compoundshape;
     std::vector<Shape*> _result;
 public:
-    void buildCircle(const Point *center, const Point *to_radius) {
-        TwoDimensionalVector* vec1 = new TwoDimensionalVector (center, to_radius);
+
+    void buildCircle(Point center, Point to_radius) {
+        TwoDimensionalVector vec1(center, to_radius);
         Shape* circle = new Circle (vec1);
         if ( !_compoundshape.empty() ) { _compoundshape.top()->addShape(circle); }
         else { _result.push_back(circle); }
     }
 
-    void buildTriangle(const Point *common_point, const Point *v1_point, const Point *v2_point) {
-        TwoDimensionalVector* vec1 = new TwoDimensionalVector (common_point, v1_point);
-        TwoDimensionalVector* vec2 = new TwoDimensionalVector (common_point, v2_point);
+    void buildTriangle(Point common_point, Point v1_point, Point v2_point) {
+        TwoDimensionalVector vec1(common_point, v1_point);
+        TwoDimensionalVector vec2(common_point, v2_point);
         Shape* triangle = new Triangle (vec1, vec2);
         if ( !_compoundshape.empty() ) { _compoundshape.top()->addShape(triangle); }
         else { _result.push_back(triangle); }
     }
 
-    void buildRectangle(const Point *common_point, const Point *v1_point, const Point *v2_point) {
-        TwoDimensionalVector* vec1 = new TwoDimensionalVector (common_point, v1_point);
-        TwoDimensionalVector* vec2 = new TwoDimensionalVector (common_point, v2_point);
+    void buildRectangle(Point common_point, Point v1_point, Point v2_point) {
+        TwoDimensionalVector vec1(common_point, v1_point);
+        TwoDimensionalVector vec2(common_point, v2_point);
         Shape* rectangle = new Rectangle (vec1, vec2);
         if ( !_compoundshape.empty() ) { _compoundshape.top()->addShape(rectangle); }
         else { _result.push_back(rectangle); }

@@ -1,14 +1,13 @@
 #pragma once
 
-#include "iterator_factory.h"
-#include "../null_iterator.h"
-#include "../list_compound_iterator.h"
+#include "./iterator_factory.h"
 
-class ListIteratorFactory : public IteratorFactory {
+class ListIteratorFactory : public IteratorFactory
+{
 private:
-    static ListIteratorFactory _instance;
-public:
+    static ListIteratorFactory instance;
     ListIteratorFactory();
-    Iterator *createIterator();
-    Iterator *createIterator(std::list<Shape *>::const_iterator begin, std::list<Shape *>::const_iterator end);
+public:
+    Iterator *createIterator() override;
+    Iterator *createIterator(std::list<Shape *>::const_iterator begin, std::list<Shape *>::const_iterator end) override;
 };

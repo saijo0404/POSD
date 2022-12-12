@@ -1,125 +1,149 @@
 #include "../src/triangle.h"
-#include "../src/iterator/factory/list_iterator_factory.h"
 #include "../src/iterator/factory/dfs_iterator_factory.h"
 #include "../src/iterator/factory/bfs_iterator_factory.h"
 
-TEST(TriangleTest, IllegalTriangle) {
-    Point point1(5, 8);
-    Point point2(8, 11);
-    Point point3(5, 11);
-    Point point4(6, 12);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    
-    ASSERT_THROW(Triangle triangle(&twoDimensionalVector1,&twoDimensionalVector2), std::runtime_error);
+class TriangleTest : public ::testing::Test
+{
+protected:
+    Point *A, *B, *C, *D, *E, *F;
+    TwoDimensionalVector *u, *v, *w, *e, *f;
+    void SetUp() override
+    {
+
+        A = new Point(5, 8);
+        B = new Point(10, 8);
+        C = new Point(8, 11);
+        D = new Point(7, 8);
+        E = new Point(5, 11);
+        F = new Point(6, 12);
+        u = new TwoDimensionalVector(*A, *B);
+        v = new TwoDimensionalVector(*A, *C);
+        w = new TwoDimensionalVector(*C, *B);
+        e = new TwoDimensionalVector(*A, *D);
+        f = new TwoDimensionalVector(*E, *F);
+    }
+
+    void TearDown() override
+    {
+        delete A;
+        delete B;
+        delete C;
+        delete D;
+        delete E;
+        delete F;
+        delete u;
+        delete v;
+        delete w;
+        delete e;
+        delete f;
+    }
+};
+
+TEST_F(TriangleTest, LegalTriangle)
+{
+    ASSERT_NO_THROW(Triangle(*v, *u));
+    ASSERT_NO_THROW(Triangle(*v, *e));
+    ASSERT_NO_THROW(Triangle(*v, *w));
+    ASSERT_NO_THROW(Triangle(*w, *u));
 }
 
-TEST(TriangleTest, Info) {
-    Point point1(0, 0);
-    Point point2(3, 0);
-    Point point3(3, 4);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Triangle triangle(&twoDimensionalVector1,&twoDimensionalVector2);
-    ASSERT_EQ("Triangle (Vector ((0.00, 0.00), (3.00, 0.00)), Vector ((3.00, 4.00), (3.00, 0.00)))", triangle.info());
+TEST_F(TriangleTest, IllegalTriangle)
+{
+    // two vectors do not connect to each other
+    ASSERT_ANY_THROW(Triangle(*v, *f));
+    ASSERT_ANY_THROW(Triangle(*f, *v));
+    ASSERT_ANY_THROW(Triangle(*w, *e));
+    ASSERT_ANY_THROW(Triangle(*f, *w));
+    // parallel vectors
+    ASSERT_ANY_THROW(Triangle(*e, *u));
 }
 
-TEST(TriangleTest, Perimeter) {
-    Point point1(1.777, 0);
-    Point point2(3, 0);
-    Point point3(2, 1.77777);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Triangle triangle(&twoDimensionalVector1,&twoDimensionalVector2);
-
-    ASSERT_NEAR(5.054423835604, triangle.perimeter(), 0.001);
+TEST_F(TriangleTest, AreaShouldBeCorrect)
+{
+    ASSERT_NEAR(7.5, Triangle(*v, *u).area(), 0.001);
+    ASSERT_NEAR(7.5, Triangle(*u, *v).area(), 0.001);
+    ASSERT_NEAR(7.5, Triangle(*w, *u).area(), 0.001);
+    ASSERT_NEAR(7.5, Triangle(*v, *w).area(), 0.001);
 }
 
-TEST(TriangleTest, Area) {
-    Point point1(0, 0);
-    Point point2(3, 0);
-    Point point3(3, 4);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Triangle triangle(&twoDimensionalVector1,&twoDimensionalVector2);
-
-    ASSERT_NEAR(6, triangle.area(), 0.001);
+TEST_F(TriangleTest, PerimeterShouldBeCorrect)
+{
+    ASSERT_NEAR(12.8481, Triangle(*v, *u).perimeter(), 0.001);
+    ASSERT_NEAR(12.8481, Triangle(*u, *v).perimeter(), 0.001);
+    ASSERT_NEAR(12.8481, Triangle(*w, *u).perimeter(), 0.001);
+    ASSERT_NEAR(12.8481, Triangle(*v, *w).perimeter(), 0.001);
 }
 
-TEST(TriangleTest, CreateDFSIterator) {
-    Point point1(0, 0);
-    Point point2(3, 0);
-    Point point3(3, 4);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Triangle triangle(&twoDimensionalVector1,&twoDimensionalVector2);
-
-    ASSERT_TRUE(triangle.createDFSIterator()->isDone());
+TEST_F(TriangleTest, InfoShouldBeCorrect)
+{
+    Triangle tri(*v, *u);
+    ASSERT_EQ("Triangle (Vector ((5.00, 8.00), (8.00, 11.00)), Vector ((5.00, 8.00), (10.00, 8.00)))", tri.info());
 }
 
-TEST(TriangleTest, CreateBFSIterator) {
-    Point point1(0, 0);
-    Point point2(3, 0);
-    Point point3(3, 4);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Triangle triangle(&twoDimensionalVector1,&twoDimensionalVector2);
+// hw 2
+TEST_F(TriangleTest, AddShapeShouldThrowException)
+{
+    Triangle tri(*v, *u);
+    Shape *s = new Triangle(*v, *u);
 
-    ASSERT_TRUE(triangle.createBFSIterator()->isDone());
+    ASSERT_ANY_THROW(tri.addShape(s));
+
+    delete s;
 }
 
-TEST(TriangleTest, AddShape) {
-    Point point1(0, 0);
-    Point point2(3, 0);
-    Point point3(3, 4);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Shape* triangle = new Triangle(&twoDimensionalVector1,&twoDimensionalVector2);
-    ASSERT_THROW(triangle->addShape(triangle),std::runtime_error);
+TEST_F(TriangleTest, DeleteShapeShouldThrowException)
+{
+    Triangle tri(*v, *u);
+    Shape *s = new Triangle(*v, *u);
+
+    ASSERT_ANY_THROW(tri.deleteShape(s));
+
+    delete s;
 }
 
-TEST(TriangleTest, DeleteShape) {
-    Point point1(0, 0);
-    Point point2(3, 0);
-    Point point3(3, 4);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Shape* triangle = new Triangle(&twoDimensionalVector1,&twoDimensionalVector2);
-    ASSERT_THROW(triangle->deleteShape(triangle),std::runtime_error);
+TEST_F(TriangleTest, CurrentItemOfDFSIteratorShouldThrowException)
+{
+    Triangle tri(*v, *u);
+    Iterator *it = tri.createIterator(IteratorFactory::getInstance("DFS"));
+    ASSERT_ANY_THROW(it->currentItem());
+
+    delete it;
 }
 
-TEST(TriangleTest, GetPoints) {
-    Point point1(0, 0);
-    Point point2(3, 0);
-    Point point3(3, 4);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Shape* triangle = new Triangle(&twoDimensionalVector1,&twoDimensionalVector2);
-    std::set<const Point*> points = triangle->getPoints();
+TEST_F(TriangleTest, IsDoneOfDFSIteratorShouldReturnTrue)
+{
+    Triangle tri(*v, *u);
+    Iterator *it = tri.createIterator(IteratorFactory::getInstance("DFS"));
+    ASSERT_TRUE(it->isDone());
 
-    ASSERT_NE(points.end(),points.find(&point1));
-    ASSERT_NE(points.end(),points.find(&point2));
-    ASSERT_NE(points.end(),points.find(&point3));
+    delete it;
 }
 
-TEST(TriangleTest, Factory) {
-    Point point1(0, 0);
-    Point point2(3, 0);
-    Point point3(3, 4);
-    Point point4(3, 0);
-    TwoDimensionalVector twoDimensionalVector1(&point1, &point2);
-    TwoDimensionalVector twoDimensionalVector2(&point3, &point4);
-    Shape* triangle = new Triangle(&twoDimensionalVector1,&twoDimensionalVector2);
-    
-    ASSERT_TRUE(triangle->createIterator(new ListIteratorFactory())->isDone());
-    ASSERT_TRUE(triangle->createIterator(new DFSIteratorFactory())->isDone());
-    ASSERT_TRUE(triangle->createIterator(new BFSIteratorFactory())->isDone());
+TEST_F(TriangleTest, CurrentItemOfBFSIteratorShouldThrowException)
+{
+    Triangle tri(*v, *u);
+    Iterator *it = tri.createIterator(IteratorFactory::getInstance("BFS"));
+    ASSERT_ANY_THROW(it->currentItem());
+
+    delete it;
+}
+
+TEST_F(TriangleTest, IsDoneOfBFSIteratorShouldReturnTrue)
+{
+    Triangle tri(*v, *u);
+    Iterator *it = tri.createIterator(IteratorFactory::getInstance("BFS"));
+    ASSERT_TRUE(it->isDone());
+
+    delete it;
+}
+
+// hw 3
+TEST_F(TriangleTest, GetPointsShouldBeCorrect)
+{
+    Triangle tri(*v, *u);
+    std::set<Point> points = tri.getPoints();
+    ASSERT_TRUE(points.size() == 3);
+    ASSERT_TRUE(points.find(*A) != points.end());
+    ASSERT_TRUE(points.find(*B) != points.end());
+    ASSERT_TRUE(points.find(*C) != points.end());
 }
