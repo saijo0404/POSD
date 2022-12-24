@@ -11,15 +11,9 @@ private:
     Point _min;
 
 public:
-    BoundingBox(std::set<Point> points) : _max(calMaximumPoint(points)), _min(calMinimumPoint(points)){
-        //_max = calMaximumPoint(points);
-        //_min = calMinimumPoint(points);
-    }
+    BoundingBox(std::set<Point> points) : _max(calMaximumPoint(points)), _min(calMinimumPoint(points)){}
 
-    ~BoundingBox() {
-        /*delete _max;
-        delete _min;*/
-    }
+    ~BoundingBox() {}
 
     Point calMaximumPoint(std::set<Point> &points) {
         double tmpx = -1*DBL_MAX;
@@ -41,7 +35,6 @@ public:
         } 
         Point tmp(tmpx,tmpy);
         return tmp;
-        //return new Point(tmpx,tmpy);
     }
 
     Point max() { return _max; }

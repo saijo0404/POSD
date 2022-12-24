@@ -23,10 +23,6 @@ public:
     double perimeter() const override { return 2 * M_PI * radius(); }
 
     std::string info() const override {
-        /*std::ostringstream ostr;
-        ostr << "Circle (" << _radiusVec.info() <<")";
-        std::string s = ostr.str();
-        return s;*/
         return "Circle (" + _radiusVec.info() + ")";
     }
 
@@ -34,10 +30,15 @@ public:
 
     std::set<Point> getPoints() override {
         std::set<Point> points;
-        points.insert(Point(_radiusVec.a()->x()+_radiusVec.length(),_radiusVec.a()->y()+_radiusVec.length()));
-        points.insert(Point(_radiusVec.a()->x()-_radiusVec.length(),_radiusVec.a()->y()-_radiusVec.length()));
+        points.insert(Point(_radiusVec.a().x()+_radiusVec.length(),_radiusVec.a().y()+_radiusVec.length()));
+        points.insert(Point(_radiusVec.a().x()-_radiusVec.length(),_radiusVec.a().y()-_radiusVec.length()));
         return points;
     }
 
     void accept(ShapeVisitor *visitor) override { visitor->visitCircle(this); }
+
+    void move(double deltaX, double deltaY) override {
+        _radiusVec.move(deltaX, deltaY);
+    }
+
 };

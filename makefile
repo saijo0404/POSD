@@ -19,8 +19,17 @@ TEST = test/ut_point.h \
 		test/builder/ut_scanner.h \
 		test/builder/ut_shape_parser.h \
 		test/utils/ut_file_reader.h \
-		test/graphics/mock_sdl_renderer.h \
+
+
+GRAPHICS_TEST = test/graphics/mock_sdl_renderer.h \
 		test/graphics/ut_sdl_adapter.h \
+		test/graphics/drag_and_drop/command/ut_commany_history.h \
+		test/graphics/drag_and_drop/mock_drag_and_drop.h \
+		test/graphics/drag_and_drop/command/ut_grab_command.h \
+		test/graphics/drag_and_drop/command/ut_move_command.h \
+		test/graphics/drag_and_drop/command/ut_drop_command.h \
+		test/graphics/drag_and_drop/command/ut_undo_command.h \
+		test/graphics/drag_and_drop/command/ut_macro_command.h \
 
 SRC = src/point.h \
 		src/two_dimensional_vector.h \
@@ -54,6 +63,16 @@ GRAPHICS = src/graphics/canvas.h \
 		src/graphics/sdl/piece/piece.h \
 		src/graphics/sdl/piece/cir_piece.h \
 		src/graphics/sdl/piece/line_piece.h \
+        src/graphics/event_listener.h \
+        src/graphics/drag_and_drop/drag_and_drop.h \
+        src/graphics/drag_and_drop/mouse_position.h \
+        src/graphics/drag_and_drop/command/command.h \
+        src/graphics/drag_and_drop/command/command_history.h \
+        src/graphics/drag_and_drop/command/grab_command.h \
+        src/graphics/drag_and_drop/command/drop_command.h \
+        src/graphics/drag_and_drop/command/move_command.h \
+        src/graphics/drag_and_drop/command/undo_command.h \
+        src/graphics/drag_and_drop/command/refresh_command.h \
 
 FACTORY = obj/iterator_factory.o \
 		obj/dfs_iterator_factory.o \
@@ -63,7 +82,7 @@ FACTORY = obj/iterator_factory.o \
 sdl: src/graphics.cpp $(SRC) $(GRAPHICS) $(FACTORY)
 	g++ -std=c++17 src/graphics.cpp $(FACTORY) -o bin/graphics -lSDL2 -lSDL2_image
 
-ut_main: test/ut_main.cpp $(TEST) $(SRC) $(FACTORY)
+ut_main: test/ut_main.cpp $(TEST) $(GRAPHICS_TEST) $(SRC) $(GRAPHICS) $(FACTORY)
 	g++ -std=c++17 test/ut_main.cpp $(FACTORY) -o bin/ut_all -lgtest -lpthread
 
 obj/iterator_factory.o: src/iterator/factory/iterator_factory.h src/iterator/factory/iterator_factory.cpp

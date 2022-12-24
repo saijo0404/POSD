@@ -42,23 +42,10 @@ public:
     }
 
     std::string info() const override {
-        /*std::ostringstream ostr;
-        ostr << "CompoundShape ("; 
-        for (std::list<Shape*>::const_iterator it = _shapes.begin(); it != _shapes.end(); it++) {
-            ostr << (*it)->info();
-            if ( std::next(it,1)!=_shapes.end() ){ ostr << ", "; }
-        }
-        ostr <<")";
-        std::string s = ostr.str();
-        return s;*/
         std::string result = "CompoundShape (";
-        for (std::list<Shape *>::const_iterator it = _shapes.begin(); it != _shapes.end(); ++it)
-        {
+        for (std::list<Shape *>::const_iterator it = _shapes.begin(); it != _shapes.end(); ++it) {
             result += (*it)->info();
-            if (std::next(it) != _shapes.end())
-            {
-                result += ", ";
-            }
+            if (std::next(it) != _shapes.end()) { result += ", "; }
         }
         result += ")";
         return result;
@@ -96,4 +83,11 @@ public:
     }
 
     void accept(ShapeVisitor *visitor) override { visitor->visitCompoundShape(this); }
+
+    void move(double deltaX, double deltaY) override {
+        for (std::list<Shape *>::const_iterator it = _shapes.begin(); it != _shapes.end(); ++it) {
+            (*it)->move(deltaX, deltaY);
+        }
+    }
+
 };

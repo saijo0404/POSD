@@ -19,4 +19,5 @@ public:
     virtual void accept(ShapeVisitor* visitor) = 0;
     virtual void addShape(Shape *shape) { throw "can't add shape"; }
     virtual void deleteShape(Shape *shape) { throw "can't add shape"; }
+    virtual void move(double deltaX, double deltaY) = 0;
 };

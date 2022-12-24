@@ -5,10 +5,10 @@ TEST(TwoDimensionalVectorTest, Constructor) {
     Point point2(-3.38, 4.3);
     ASSERT_NO_THROW(TwoDimensionalVector twoDimensionalVector(point1, point2));
     TwoDimensionalVector twoDimensionalVector(point1, point2);
-    ASSERT_EQ(-8.42, twoDimensionalVector.a()->x());
-    ASSERT_EQ(3.42, twoDimensionalVector.a()->y());
-    ASSERT_EQ(-3.38, twoDimensionalVector.b()->x());
-    ASSERT_EQ(4.3, twoDimensionalVector.b()->y());
+    ASSERT_EQ(-8.42, twoDimensionalVector.a().x());
+    ASSERT_EQ(3.42, twoDimensionalVector.a().y());
+    ASSERT_EQ(-3.38, twoDimensionalVector.b().x());
+    ASSERT_EQ(4.3, twoDimensionalVector.b().y());
 }
 
 TEST(TwoDimensionalVectorTest, Info) {
